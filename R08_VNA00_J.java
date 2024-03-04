@@ -2,7 +2,7 @@
 // VNA00-J Ensure visibility when accessing shared primitive variables
 
 final class ControlledStop implements Runnable {
-    private boolean done = false;
+    private volatile boolean done = false;
 
     @Override public void run() {
         while (!done) {
@@ -10,7 +10,7 @@ final class ControlledStop implements Runnable {
                 // ...
                 Thread.currentThread().sleep(1000); // Do something
             }   catch(InterruptedException ie) {
-                Thread.currentThread().interrupt(); // Reset interrupted
+                Thread.currentThread().interrupt(); // Reset interrupted status
             }
         }
     }
