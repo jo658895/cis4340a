@@ -2,19 +2,20 @@
 // CON51-J Do not assume that the sleep(), yield(), or getState() methods provide synchronization semantics
 
 final class ControlledStop implements Runnable {
-    private boolean done = false;
 
     @Override public void run() {
-        while (!done) {
+        // Record current thread, so others can interrupt it
+        myThread = currentThread();
+        while (!Thread.interrupted()) {
             try {
                 Thread.sleep(1000);
-            } catch (InterruptedException e) {
-              // Reset interrupted status
-              Thread.currentThread().interrupt(); }
+            }   catch (InterruptedException e) {
+              Thread.currentThread().interrupt();
+            }
         }
     }
 
-    public void shutdown() {
-        this.done = true;
+    public void shutdown(Thread th) {
+        th.interrupt();
     }
 }
